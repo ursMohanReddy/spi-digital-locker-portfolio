@@ -1,28 +1,28 @@
 window.PORTFOLIO_DATA = {
   meta: {
-    projectTitle: "SPI-Based 4-Bit Digital Locker",
-    subtitle: "A Verilog HDL and FPGA-Based Digital Access Control System",
+    projectTitle: "SPI-Based 2-Bit Digital Locker",
+    subtitle: "A Discrete-IC Digital Access Control System (Logisim-evolution + Breadboard)",
     department: "School of EEE · Department of Electronics Engineering (VLSI Design & Technology)",
     teamId: "Team 13",
     siteCode: "vdt-mp-2026-SPI-team13",
-    mentor: "Faculty Mentor (Update Name)",
+    mentor: "Urja Ma'am · Pratiksha Ma'am · Suraj Sir",
     activeReview: "Review 2 · Concept Selection",
     lastUpdated: "18 Nov 2026",
-    storedPasscode: "1010",
+    storedPasscode: "10",
     intro:
-      "The SPI-Based 4-Bit Digital Locker is a digital access control system designed using Verilog HDL. It uses Serial Peripheral Interface (SPI) communication to transfer a 4-bit access code between a Master FPGA board and a Slave FPGA board for hardware password verification and access control. Verified using Vivado simulation, Proteus 8 discrete logic capture, and dual-FPGA breadboard hardware.",
+      "The SPI-Based 2-Bit Digital Locker is a digital access control system built from six standard ICs (NE555, 74163, 74165, 74595, 7485 and 7432). A 2-bit access code (4 possible codes) is entered on a DIP switch, sent serially in the style of SPI, received by a serial-in parallel-out register, and compared with a stored code by a magnitude comparator. A green LED shows UNLOCKED and a red LED shows LOCKED. The design is verified in Logisim-evolution simulation and on a breadboard.",
     problemStatement:
-      "Conventional mechanical locks and standalone parallel-wired keypads suffer from physical key duplication, exposed wiring vulnerabilities, and excessive interconnect pin counts when separating the user entry terminal from the lock controller. A deterministic, low-pin-count hardware access system is needed to transfer a 4-bit credential serially across isolated control boards with clear visual status feedback.",
+      "Conventional mechanical locks and standalone parallel-wired keypads suffer from physical key duplication, exposed wiring, and a high wire count when the user entry unit is separated from the lock unit. A simple, low-wire-count hardware access circuit is needed that sends a short credential serially between two stages, checks it against a stored code, and gives clear visual feedback.",
     needStatement:
-      "Design and validate a low-pin-count, synchronous digital access verification system that transfers a 4-bit user credential from an input unit to an isolated lock-control unit, compares it against a stored reference code in hardware, and drives unambiguous unlocked, locked, and wrong-code indicators across simulation and FPGA hardware.",
+      "Design and validate a low-wire-count, synchronous digital access verification circuit built from standard ICs that transfers a 2-bit user credential serially from an input stage to a lock stage, compares it against a stored reference code, and drives unambiguous UNLOCKED (green) and LOCKED (red) indicators in Logisim-evolution simulation and on a breadboard.",
     objectives: [
-      "Design and implement a 4-bit digital locker system using the 4-wire SPI communication protocol.",
-      "Establish synchronous serial data communication between an SPI Master FPGA and an SPI Slave FPGA.",
-      "Transmit and receive a 4-bit access code through MOSI, MISO, SCLK, and active-LOW CS/SS lines.",
-      "Compare the received 4-bit access code against a predefined stored password register.",
-      "Grant access (Green LED) when the entered code matches and deny access (Red/Yellow LEDs) when incorrect.",
-      "Verify system functionality through Verilog HDL simulation in Vivado, Proteus schematic capture, and FPGA hardware.",
-      "Apply digital logic design and serial protocol timing concepts to practical electronic security hardware."
+      "Design and implement a 2-bit digital locker using an SPI-style serial transfer built from discrete ICs.",
+      "Generate a stable clock with an NE555 astable timer and sequence the transfer with a 74163 synchronous counter.",
+      "Load the 2-bit code into a 74165 parallel-in serial-out register and shift it serially into a 74595 serial-in parallel-out register.",
+      "Compare the received 2-bit code against the stored code using a 7485 4-bit magnitude comparator.",
+      "Grant access (Green LED) when the codes match (A = B) and deny access (Red LED) otherwise, using a 7432 OR gate to combine A > B and A < B.",
+      "Verify system functionality through Logisim-evolution simulation and a breadboard prototype.",
+      "Apply digital logic design and serial timing concepts to practical electronic security hardware."
     ]
   },
 
@@ -56,7 +56,7 @@ window.PORTFOLIO_DATA = {
     { n: "05", label: "Subsys", page: "architecture", state: "active" },
     { n: "06", label: "Calc", page: "calculations", state: "upcoming" },
     { n: "07", label: "Comp", page: "calculations", state: "upcoming" },
-    { n: "08", label: "RTL", page: "verification", state: "active" },
+    { n: "08", label: "Logisim", page: "verification", state: "active" },
     { n: "09", label: "BOM", page: "calculations", state: "upcoming" },
     { n: "10", label: "Sim", page: "verification", state: "active" },
     { n: "11", label: "Build", page: "verification", state: "upcoming" },
@@ -68,133 +68,134 @@ window.PORTFOLIO_DATA = {
   ],
 
   team: [
-    { name: "Pallavi T", usn: "01FE24BEV040", initials: "PT", role: "SPI Master RTL & Clock Divider", subsystem: "Master FPGA Controller", leadReview: "Review 1", status: "Active" },
-    { name: "Achsah Praisey G", usn: "01FE24BEV003", initials: "AP", role: "SPI Slave Deserializer & Comparator", subsystem: "Slave FPGA & Lock Logic", leadReview: "Review 2", status: "Current Lead" },
-    { name: "Ansiba S", usn: "01FE25BEV702", initials: "AS", role: "Proteus Capture & Hardware Wiring", subsystem: "Breadboard, LEDs & Interconnect", leadReview: "Review 3", status: "Active" },
-    { name: "Mohan Reddy", usn: "01FE24BEV035", initials: "MR", role: "Vivado Testbench, Timing & Portfolio", subsystem: "Verification & FPGA Integration", leadReview: "Review 4–Final", status: "Active" }
+    { name: "Pallavi T", usn: "01FE24BEV040", initials: "PT", role: "Clock & Sender Stage (NE555, 74163, 74165)", subsystem: "Clock & Sender Circuit", leadReview: "Review 1", status: "Active" },
+    { name: "Achsah Praisey G", usn: "01FE24BEV003", initials: "AP", role: "Receiver & Comparator (74595, 7485, 7432)", subsystem: "Receiver & Lock Logic", leadReview: "Review 2", status: "Current Lead" },
+    { name: "Ansiba S", usn: "01FE25BEV702", initials: "AS", role: "Breadboard Wiring & Hardware Testing", subsystem: "Breadboard, LEDs & Interconnect", leadReview: "Review 3", status: "Active" },
+    { name: "Mohan Reddy", usn: "01FE24BEV035", initials: "MR", role: "Logisim Simulation, Timing & Portfolio", subsystem: "Verification & System Integration", leadReview: "Review 4–Final", status: "Active" }
   ],
 
   designInputs: [
-    { param: "Credential Width", value: "4-bit binary (16 combinations)", source: "Design Specification" },
-    { param: "Communication Link", value: "4-Wire Full-Duplex SPI (Mode 0: CPOL=0, CPHA=0)", source: "SPI Standard" },
-    { param: "Master / Slave Platform", value: "Dual FPGA Boards + Breadboard Interconnect", source: "Lab Hardware" },
-    { param: "Logic Voltage Level", value: "3.3 V LVCMOS (FPGA I/O) / 5 V (Proteus 74HC Sim)", source: "Datasheet" },
-    { param: "Status Indicators", value: "Green (Unlocked), Red (Locked), Yellow (Wrong Code)", source: "User Requirement" },
-    { param: "Serial Clock (SCLK)", value: "Divided from FPGA system clock (<= 1 MHz breadboard safe)", source: "Assumed / Calculated" }
+    { param: "Credential Width", value: "2-bit binary (4 combinations)", source: "Design Specification" },
+    { param: "Serial Link", value: "SPI-style: serial data + shared clock + load/latch", source: "Design Specification" },
+    { param: "Implementation", value: "Six discrete ICs on a breadboard, simulated in Logisim-evolution", source: "Lab Hardware" },
+    { param: "Logic Supply", value: "5 V supply, common ground for all ICs", source: "Datasheet" },
+    { param: "Code Entry", value: "Two 4-way DIP switches: SW1 = entered code, SW2 = stored code (2 of 4 switches used)", source: "Purchase Invoice #755" },
+    { param: "Status Indicators", value: "Green (Unlocked) and Red (Locked)", source: "User Requirement" },
+    { param: "Clock", value: "NE555 astable, slow enough (a few Hz) to see every shift on the LEDs", source: "Assumed / Calculated" }
   ],
 
   backgroundStudy: [
-    { title: "SPI Protocol Mode 0 Timing", type: "Application Note", takeaway: "With CPOL=0 and CPHA=0, data is shifted out on falling SCLK edge and sampled cleanly on the rising edge, giving half a clock period of setup/hold margin." },
-    { title: "74HC165 / 74HC595 Shift Registers", type: "Proteus Prototype", takeaway: "Discrete logic simulation in Proteus 8 validated bit-shifting, clock gating, and comparator truth tables before synthesizing the Verilog RTL." },
-    { title: "FPGA Debouncing & Metastability", type: "Reference Design", takeaway: "Mechanical pushbuttons and asynchronous board-to-board SPI signals require 2-FF synchronizers and debouncers to avoid false triggers." },
-    { title: "Hardware Comparator Security", type: "Digital Design Study", takeaway: "Storing the reference passcode inside the isolated Slave FPGA prevents an attacker probing the Master input switches from reading the stored key." }
+    { title: "74165 PISO and 74595 SIPO Shift Registers", type: "Datasheet", takeaway: "The 74165 loads parallel inputs and shifts them out serially on clock pulses; the 74595 collects a serial stream back into parallel outputs. Together they form a serial link between two stages, and both are 8-bit parts, so the same wiring could carry wider codes." },
+    { title: "NE555 Astable Timer", type: "Datasheet", takeaway: "Two resistors and one capacitor set the output frequency, f ≈ 1.44 / ((R1 + 2·R2)·C). Larger capacitor values give a slow clock so every shift is visible on LEDs." },
+    { title: "74163 Synchronous 4-Bit Counter", type: "Datasheet", takeaway: "All flip-flops change on the same clock edge, so decoded count states are glitch-free and can mark exactly when the 2 bits have been sent." },
+    { title: "7485 4-Bit Magnitude Comparator", type: "Datasheet", takeaway: "Compares two 4-bit words and gives A > B, A = B and A < B outputs. For a 2-bit code the unused inputs must be tied to a fixed level, and the cascade inputs must be set correctly for single-chip use." }
   ],
 
   concepts: [
     {
-      name: "Concept A: Dual-FPGA 4-Wire SPI Locker",
+      name: "Concept A: Serial (SPI-style) Link with 74165 → 74595 and 7485 Comparator",
       badge: "CHOSEN",
       badgeClass: "b-green",
-      summary: "Master FPGA reads 4-bit switch input and transmits serially over MOSI, SCLK, CS/SS to a Slave FPGA holding the stored code and lock FSM.",
-      pros: "Minimal 4-wire bus, full-duplex ACK via MISO, cleanly separates input terminal from secure lock unit, easy Vivado + hardware demo.",
-      cons: "Requires careful SCLK synchronization and shared ground reference between the two FPGA boards."
+      summary: "The 2-bit code from SW1 is loaded into a 74165, shifted serially with the NE555/74163 clock into a 74595, and compared with the stored code on SW2 by a 7485. Green LED on A = B, red LED otherwise.",
+      pros: "Few wires between stages, scales to wider codes, shared clock keeps timing simple, and every step can be seen on LEDs and in Logisim.",
+      cons: "Needs more ICs than a direct comparison, and the clock and counter must be sequenced correctly."
     },
     {
-      name: "Concept B: Parallel 4-Bit Direct Interconnect",
+      name: "Concept B: Direct Parallel Comparison",
       badge: "REJECTED",
       badgeClass: "b-red",
-      summary: "Connects 4 data wires + strobe directly from switches/Master to Slave comparator without serial protocol framing.",
-      pros: "Simplest combinational logic, zero serialization latency.",
-      cons: "Does not scale to 8/16-bit codes, wastes I/O pins, and lacks frame boundary (CS/SS) or return status channel."
+      summary: "Wires SW1 straight into the 7485 comparator next to the stored code with no serial stage.",
+      pros: "Simplest circuit, fewest ICs, no timing or clock needed.",
+      cons: "Wire count grows with every extra bit, and it does not demonstrate serial communication, which is the theme of this project."
     },
     {
-      name: "Concept C: UART Asynchronous Serial Locker",
+      name: "Concept C: UART-style Asynchronous Serial",
       badge: "REJECTED",
       badgeClass: "b-amber",
-      summary: "Uses TX/RX asynchronous frames with baud-rate generators on both FPGAs to exchange access codes.",
-      pros: "Only 2 signal wires (TX/RX) needed between boards.",
-      cons: "Requires precise clock-frequency matching, baud generator overhead, and start/stop bit framing complexity."
+      summary: "Sends the code with start and stop bits and a baud-rate clock on each side, without a shared clock.",
+      pros: "Only one data wire between stages.",
+      cons: "Needs framing logic and matched baud clocks on both sides, which means many more ICs than a breadboard project should use."
     }
   ],
 
   pughCriteria: [
-    { criterion: "Pin Efficiency & Scalability", weight: 5, a: 1, b: -1, c: 1 },
+    { criterion: "Wire-Count Scalability (wider codes)", weight: 5, a: 1, b: -1, c: 1 },
     { criterion: "Timing Determinism (Shared Clock)", weight: 5, a: 1, b: 1, c: -1 },
-    { criterion: "Verilog RTL & FPGA Resource Simplicity", weight: 4, a: 1, b: 1, c: 0 },
-    { criterion: "Fault / Return Status Feedback (MISO)", weight: 4, a: 1, b: -1, c: 1 },
-    { criterion: "Breadboard Signal Integrity", weight: 3, a: 1, b: 0, c: 0 }
+    { criterion: "IC Count & Breadboard Simplicity", weight: 4, a: 0, b: 1, c: -1 },
+    { criterion: "Demonstrates Serial Communication (Project Theme)", weight: 4, a: 1, b: -1, c: 1 },
+    { criterion: "Ease of Debugging with LEDs / Logisim", weight: 3, a: 1, b: 0, c: 0 }
   ],
 
   frs: [
-    { id: "FR1", desc: "Master FPGA shall capture a 4-bit access code and serialize it MSB-first over MOSI within 4 SCLK cycles after CS/SS asserts LOW.", target: "4 SCLK cycles", method: "Vivado Waveform + Logic Analyzer", source: "Design Spec", status: "Draft" },
-    { id: "FR2", desc: "Slave FPGA shall sample MOSI on the rising edge of SCLK (SPI Mode 0) with zero bit-slip across 20 consecutive transfers.", target: "0 bit errors / 20 frames", method: "Verilog Testbench + Hardware Loop", source: "SPI Standard", status: "Draft" },
-    { id: "FR3", desc: "Slave comparator shall assert UNLOCK (Green LED) if received 4-bit code equals stored password, else assert WRONG_CODE (Yellow LED) and keep LOCKED (Red LED).", target: "100% truth-table match (16/16 codes)", method: "Exhaustive 4-bit Testbench", source: "User Need", status: "Draft" },
-    { id: "FR4", desc: "System shall return a 1-bit access status acknowledgement from Slave to Master over MISO before CS/SS deasserts HIGH.", target: "Valid ACK before CS/SS rising", method: "Vivado Timing Simulation", source: "Architecture Spec", status: "Draft" },
-    { id: "FR5", desc: "Reset button shall force both Master and Slave FSMs into the safe LOCKED state (Red LED ON, Green/Yellow OFF) within 1 clock cycle.", target: "Deterministic safe reset", method: "Simulation + Board Pushbutton Test", source: "Safety Requirement", status: "Draft" }
+    { id: "FR1", desc: "The 74165 shall load the 2-bit code from SW1 and shift it out serially, one bit per clock pulse, so the full code is sent in 2 clock pulses.", target: "2 clock pulses", method: "Logisim Waveform + Breadboard LED Check", source: "Design Spec", status: "Draft" },
+    { id: "FR2", desc: "The 74595 shall receive the serial stream and present the same 2-bit code on its outputs, with zero bit errors across 20 consecutive transfers.", target: "0 bit errors / 20 transfers", method: "Logisim Simulation + Breadboard Repeat Test", source: "Design Spec", status: "Draft" },
+    { id: "FR3", desc: "The 7485 shall compare the received code with the stored code on SW2 and light the Green LED only when A = B; for every other code the Red LED stays on.", target: "100% truth-table match (4/4 codes)", method: "Exhaustive 2-Bit Test (all 4 codes)", source: "User Need", status: "Draft" },
+    { id: "FR4", desc: "The NE555 clock and the 74163 counter shall limit each attempt to exactly 2 clock pulses at a slow, stable rate.", target: "Exactly 2 bits per attempt", method: "Logisim Waveform + Breadboard LED Check", source: "Architecture Spec", status: "Draft" },
+    { id: "FR5", desc: "A reset shall force the circuit into the safe LOCKED state (Red LED ON, Green LED OFF).", target: "Deterministic safe reset", method: "Simulation + Breadboard Test", source: "Safety Requirement", status: "Draft" }
   ],
 
   archBlocks: [
-    { id: "input", title: "User Input Interface", board: "Master FPGA", fr: "FR1, FR5", ports: "IN: sw[3:0], btn_send, rst | OUT: code_latched[3:0], start_tx", desc: "Debounces the pushbuttons and latches the 4-bit access code entered by the user before triggering an SPI frame." },
-    { id: "master", title: "SPI Master Controller", board: "Master FPGA", fr: "FR1, FR4", ports: "IN: clk, rst, start_tx, code[3:0], miso | OUT: sclk, mosi, cs_n, ack_rx", desc: "Generates divided SCLK, drives active-LOW CS/SS, shifts out 4 bits MSB-first on MOSI, and samples Slave ACK on MISO." },
-    { id: "bus", title: "4-Wire SPI Bus", board: "Interconnect", fr: "FR1, FR2", ports: "MOSI (M→S) · MISO (S→M) · SCLK (M→S) · CS/SS (M→S) + Common GND", desc: "Breadboard jumper interconnect linking the two FPGA boards using Mode 0 synchronous serial signaling." },
-    { id: "slave", title: "SPI Slave Deserializer", board: "Slave FPGA", fr: "FR2, FR4", ports: "IN: sclk, cs_n, mosi, rst | OUT: rx_code[3:0], rx_done, miso", desc: "Captures incoming MOSI bits into a 4-bit shift register on rising SCLK edges while CS/SS is LOW and pulses rx_done on the 4th bit." },
-    { id: "compare", title: "Comparator & Lock FSM", board: "Slave FPGA", fr: "FR3, FR5", ports: "IN: rx_code[3:0], rx_done, rst | OUT: led_green, led_red, led_yellow, lock_out", desc: "Compares rx_code against the predefined 4-bit stored password (4'b1010) and drives Unlocked (Green), Locked (Red), or Wrong Code (Yellow) indicators." }
+    { id: "input", title: "Code Entry (DIP Switches)", board: "Input", fr: "FR1, FR5", ports: "IN: SW1[1:0] entered code, SW2[1:0] stored code | OUT: parallel code to 74165, stored code to 7485", desc: "Two 4-way DIP switches, with 2 of the 4 switches used on each. SW1 holds the code being entered and SW2 holds the stored code." },
+    { id: "master", title: "Sender Stage (NE555 + 74163 + 74165)", board: "Sender", fr: "FR1, FR4", ports: "NE555: clock out | 74163: counts clock pulses | 74165: parallel in, serial out", desc: "The NE555 generates the clock, the 74163 counts pulses so exactly 2 bits are sent, and the 74165 loads the entered code and shifts it out serially." },
+    { id: "bus", title: "Serial Link (data · clock · load)", board: "Interconnect", fr: "FR1, FR2", ports: "Serial data (74165 → 74595) · Shared clock · Load/Latch · Common GND", desc: "The few wires that carry the code one bit at a time from the sender stage to the receiver stage, in the style of SPI." },
+    { id: "slave", title: "Receiver Stage (74595 + 7485)", board: "Receiver", fr: "FR2, FR3", ports: "74595: serial in, parallel out | 7485: A = received code, B = stored code | OUT: A>B, A=B, A<B", desc: "The 74595 collects the serial bits back into a 2-bit code and the 7485 compares it with the stored code from SW2." },
+    { id: "compare", title: "Decision & LEDs (7432 + Green / Red)", board: "Output", fr: "FR3, FR5", ports: "IN: A>B, A=B, A<B | OUT: Green LED (A = B), Red LED (A > B OR A < B)", desc: "The Green LED lights when the 7485 reports A = B. A 7432 OR gate combines A > B and A < B to light the Red LED for every wrong code." }
   ],
 
   decisions: [
     {
       id: "DC-01",
-      title: "Select SPI Mode 0 (CPOL=0, CPHA=0) for Master-Slave transfer",
-      options: "Mode 0 vs. Mode 3 (CPOL=1, CPHA=1) and Parallel 4-bit bus",
-      fr: "FR1, FR2",
-      course: "Digital Circuits",
-      concept: "Edge-triggered shift registers & setup/hold timing margins",
-      applied: "Master updates MOSI on falling SCLK edge; Slave samples on rising SCLK edge. At f_SCLK = 100 kHz (T = 10 us), setup time available is 5 us >> FPGA FF t_su (~0.5 ns).",
-      meets: "VLSI System Design — clock-domain crossing and interconnect loading on jumper wires",
-      predicted: "Zero setup/hold violations in Vivado Post-Synthesis timing & clean scope capture",
-      measured: "Pending Step 13 hardware test",
+      title: "Use an NE555 astable timer as the common clock source",
+      options: "NE555 astable vs. manual push-button clock vs. crystal oscillator",
+      fr: "FR1, FR4",
+      course: "Analog Electronic Circuits",
+      concept: "RC timing network and astable oscillation",
+      applied: "f ≈ 1.44 / ((R1 + 2·R2)·C). The purchased 1 µF and 4.7 µF capacitors allow a slow clock of a few Hz, so every shift can be seen on the LEDs. Final R and C values to be entered after calculation.",
+      meets: "Digital Circuits — synchronous clocking of counters and shift registers",
+      predicted: "Stable slow clock (a few Hz) with a repeatable period",
+      measured: "Pending Step 13 breadboard measurement",
       learning: "Pending Step 13",
       level: "Applied"
     },
     {
       id: "DC-02",
-      title: "Divide FPGA clock to <= 100 kHz for breadboard SPI interconnect",
-      options: "Direct 100 MHz FPGA clock vs. 10 MHz vs. 100 kHz divided SCLK",
-      fr: "FR2",
-      course: "Signals and Systems",
-      concept: "Bandwidth, parasitic RC rise-time, and ringing on unshielded wires",
-      applied: "Breadboard jumper capacitance (~30 pF) + series resistance limits clean square-wave edges at high MHz. Dividing 100 MHz by 1000 gives 100 kHz SCLK (T = 10 us), eliminating ringing.",
-      meets: "Digital Circuits — synchronous modulo-N clock divider counter",
-      predicted: "Clean logic-high/low transitions (< 50 ns rise time) with zero false clock glitches",
-      measured: "Pending Step 13 oscilloscope capture",
+      title: "Sequence the transfer with a 74163 synchronous counter",
+      options: "74163 synchronous counter vs. ripple counter vs. manual control",
+      fr: "FR1, FR4",
+      course: "Digital Circuits",
+      concept: "Synchronous counting without glitches",
+      applied: "All 74163 flip-flops change on the same clock edge, so decoded count states are glitch-free and can mark exactly 2 shifts per attempt.",
+      meets: "Computer Organization — control sequencing of a datapath",
+      predicted: "Exactly 2 clock pulses per attempt in Logisim and on the breadboard",
+      measured: "Pending Step 13",
       learning: "Pending Step 13",
       level: "Applied"
     },
     {
       id: "DC-03",
-      title: "Implement hardware password comparison inside Slave FPGA FSM",
-      options: "Compare on Master FPGA vs. Compare inside isolated Slave FPGA",
-      fr: "FR3, FR5",
-      course: "Computer Organization",
-      concept: "Isolated control/datapath separation & secure state machines",
-      applied: "Keeping STORED_CODE = 4'b1010 as a local parameter/register inside the Slave ensures the Master only transmits guesses and receives pass/fail status.",
-      meets: "Digital System Design (Verilog) — Moore FSM safe-reset encoding",
-      predicted: "16/16 exhaustive input combinations verified in Vivado testbench",
+      title: "Send the code serially with a 74165 → 74595 pair",
+      options: "Parallel wires vs. 74165 → 74595 serial link vs. UART-style serial",
+      fr: "FR1, FR2",
+      course: "Microcontrollers & Interfacing",
+      concept: "Serial data transfer with shift registers",
+      applied: "The 74165 loads the 2 switch bits in parallel and shifts them out; the 74595 collects them back into parallel outputs after 2 clocks. Both are 8-bit parts, so the same link could carry wider codes without extra wires.",
+      meets: "Digital Circuits — parallel-to-serial and serial-to-parallel conversion",
+      predicted: "Received code equals the entered code for all 4 codes",
       measured: "Pending Step 13",
       learning: "Pending Step 13",
       level: "Applied"
     },
     {
       id: "DC-04",
-      title: "Add 3-state LED indicator logic (Green / Red / Yellow)",
-      options: "Single Green LED vs. Dual Red/Green vs. Tri-state Green/Red/Yellow",
+      title: "Compare with a 7485 and drive the Red LED through a 7432 OR gate",
+      options: "7485 A = B output only vs. 7485 plus 7432 OR gate for the wrong-code signal",
       fr: "FR3",
-      course: "Analog Electronic Circuits",
-      concept: "Current-limiting resistor sizing for FPGA GPIO LED loads",
-      applied: "R = (V_OH - V_F) / I_LED = (3.3 V - 2.0 V) / 5 mA = 260 Ohm -> selected 330 Ohm standard resistor to keep GPIO current safely under 8 mA.",
+      course: "Digital Circuits",
+      concept: "Magnitude comparison and combinational logic",
+      applied: "The 7485 gives A > B, A = B and A < B. The Green LED follows A = B, and the Red LED follows (A > B) OR (A < B) through the 7432. Unused comparator inputs are tied low for a 2-bit code.",
       meets: "Digital Circuits — mutually exclusive combinational output decoding",
-      predicted: "Clear brightness at ~4 mA per LED without drooping FPGA 3.3 V rail",
-      measured: "Pending Step 13 multimeter measurement",
+      predicted: "Green only for the stored code, Red for the other 3 codes",
+      measured: "Pending Step 13",
       learning: "Pending Step 13",
       level: "Named"
     }
@@ -214,154 +215,54 @@ window.PORTFOLIO_DATA = {
 
   verilogTabs: [
     {
-      id: "master",
-      label: "spi_master.v",
-      desc: "4-bit SPI Mode 0 Master FSM with MSB-first shift register",
-      code: `module spi_master (
-    input  wire       clk,       // Divided SPI base clock
-    input  wire       rst,       // Active-high synchronous reset
-    input  wire       start,     // Trigger 4-bit transmission
-    input  wire [3:0] data_in,   // 4-bit access code from switches
-    input  wire       miso,      // Status ACK from Slave FPGA
-    output reg        sclk,      // Serial Clock to Slave
-    output reg        mosi,      // Master Out Slave In
-    output reg        cs_n,      // Active-LOW Chip Select
-    output reg        done,      // Frame complete pulse
-    output reg        ack_out    // Latched unlock status from Slave
-);
-    reg [3:0] shift_reg;
-    reg [2:0] bit_cnt;
-    reg       busy;
+      id: "wiring",
+      label: "IC Roles & Wiring Notes",
+      desc: "What each IC does in the circuit, with wiring notes for a 2-bit code",
+      code: `IC ROLES (2-bit code, 5 V logic)
 
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            cs_n      <= 1'b1;
-            sclk      <= 1'b0;
-            mosi      <= 1'b0;
-            done      <= 1'b0;
-            busy      <= 1'b0;
-            bit_cnt   <= 3'd0;
-            ack_out   <= 1'b0;
-            shift_reg <= 4'b0000;
-        end else if (start && !busy) begin
-            busy      <= 1'b1;
-            cs_n      <= 1'b0;
-            shift_reg <= data_in;
-            mosi      <= data_in[3];   // Present MSB before 1st rising edge
-            bit_cnt   <= 3'd4;
-            sclk      <= 1'b0;
-            done      <= 1'b0;
-        end else if (busy) begin
-            sclk <= ~sclk;
-            if (sclk == 1'b0) begin
-                // Rising edge: Slave samples MOSI; Master samples MISO
-                ack_out <= miso;
-            end else begin
-                // Falling edge: shift next bit onto MOSI
-                if (bit_cnt > 3'd1) begin
-                    bit_cnt   <= bit_cnt - 3'd1;
-                    shift_reg <= {shift_reg[2:0], 1'b0};
-                    mosi      <= shift_reg[2];
-                end else begin
-                    busy <= 1'b0;
-                    cs_n <= 1'b1;
-                    sclk <= 1'b0;
-                    done <= 1'b1;
-                end
-            end
-        end else begin
-            done <= 1'b0;
-        end
-    end
-endmodule`
+NE555   astable timer   : generates the common clock
+74163   4-bit counter   : counts clock pulses, marks when 2 bits have been sent
+74165   PISO register   : loads SW1 (entered code) and shifts it out serially
+74595   SIPO register   : receives the serial bits, holds the received code
+7485    comparator      : compares received code (A) with SW2 stored code (B)
+7432    OR gate         : Red LED = (A > B) OR (A < B)
+LEDs                    : Green = A = B (UNLOCKED), Red = otherwise (LOCKED)
+
+WIRING NOTES
+- Use only 2 of the 4 switches on SW1 and SW2.
+- Tie every unused IC input to GND or +5 V (never leave inputs floating).
+- 7485: tie unused inputs A2, A3, B2, B3 low. For single-chip use set the
+  cascade input I(A=B) high and I(A>B), I(A<B) low.
+- All ICs share +5 V and a common GND.
+- Final pin-by-pin wiring table: copy from the Logisim-evolution circuit.`
     },
     {
-      id: "slave",
-      label: "spi_slave_locker.v",
-      desc: "SPI Slave deserializer + 4-bit stored passcode comparator & LED outputs",
-      code: `module spi_slave_locker #(
-    parameter [3:0] STORED_CODE = 4'b1010
-)(
-    input  wire       sclk,
-    input  wire       cs_n,
-    input  wire       mosi,
-    input  wire       rst,
-    output reg        miso,
-    output reg        led_green,   // Unlocked
-    output reg        led_red,     // Locked
-    output reg        led_yellow   // Wrong Code
-);
-    reg [3:0] rx_shift;
-    reg [2:0] bit_cnt;
+      id: "truth",
+      label: "Truth Table",
+      desc: "All 4 possible codes checked against the stored code 10",
+      code: `Stored code (SW2) = 10
 
-    always @(posedge sclk or posedge rst or posedge cs_n) begin
-        if (rst) begin
-            rx_shift   <= 4'b0000;
-            bit_cnt    <= 3'd0;
-            led_green  <= 1'b0;
-            led_red    <= 1'b1;    // Default safe state: LOCKED
-            led_yellow <= 1'b0;
-            miso       <= 1'b0;
-        end else if (cs_n) begin
-            bit_cnt <= 3'd0;
-        end else begin
-            rx_shift <= {rx_shift[2:0], mosi};
-            if (bit_cnt == 3'd3) begin
-                if ({rx_shift[2:0], mosi} == STORED_CODE) begin
-                    led_green  <= 1'b1;
-                    led_red    <= 1'b0;
-                    led_yellow <= 1'b0;
-                    miso       <= 1'b1;
-                end else begin
-                    led_green  <= 1'b0;
-                    led_red    <= 1'b1;
-                    led_yellow <= 1'b1;
-                    miso       <= 1'b0;
-                end
-                bit_cnt <= 3'd0;
-            end else begin
-                bit_cnt <= bit_cnt + 3'd1;
-            end
-        end
-    end
-endmodule`
+Entered  Received   A>B  A=B  A<B   Green  Red
+(SW1)    (74595)
+  00        00       0    0    1     OFF    ON
+  01        01       0    0    1     OFF    ON
+  10        10       0    1    0     ON     OFF   <- UNLOCKED
+  11        11       1    0    0     OFF    ON
+
+Red LED = (A>B) OR (A<B)   [7432 OR gate]
+Green LED = (A=B)`
     },
     {
-      id: "tb",
-      label: "tb_spi_locker.v",
-      desc: "Self-checking Vivado testbench testing wrong code, correct code, and reset",
-      code: `\`timescale 1ns / 1ps
-module tb_spi_locker;
-    reg        clk = 0, rst = 1, start = 0;
-    reg  [3:0] data_in = 4'b0000;
-    wire       sclk, mosi, miso, cs_n, done, ack_out;
-    wire       led_green, led_red, led_yellow;
-
-    spi_master u_master (
-        .clk(clk), .rst(rst), .start(start), .data_in(data_in),
-        .miso(miso), .sclk(sclk), .mosi(mosi), .cs_n(cs_n),
-        .done(done), .ack_out(ack_out)
-    );
-
-    spi_slave_locker #(.STORED_CODE(4'b1010)) u_slave (
-        .sclk(sclk), .cs_n(cs_n), .mosi(mosi), .rst(rst),
-        .miso(miso), .led_green(led_green),
-        .led_red(led_red), .led_yellow(led_yellow)
-    );
-
-    always #50 clk = ~clk; // 10 MHz sim clock
-
-    initial begin
-        #120 rst = 0;
-        // Test 1: Wrong code 4'b0110 -> Expect Red + Yellow ON
-        data_in = 4'b0110; start = 1; #100 start = 0;
-        wait(done); #200;
-        // Test 2: Correct code 4'b1010 -> Expect Green ON
-        data_in = 4'b1010; start = 1; #100 start = 0;
-        wait(done); #200;
-        $finish;
-    end
-endmodule`
+      id: "test",
+      label: "Test Procedure",
+      desc: "How to verify the circuit in Logisim-evolution and on the breadboard",
+      code: `1. Set SW2 (stored code) = 10.
+2. Set SW1 (entered code) = 00 and start a transfer (2 clock pulses).
+3. Check the 74595 outputs and the LEDs (expect Red ON, Green OFF).
+4. Repeat for 01, 10 and 11 (expect Green ON only for 10).
+5. Press reset and confirm Red ON, Green OFF.
+6. On the breadboard, repeat each code 5 times (20 transfers) and log any
+   bit error or wrong LED.`
     }
   ],
 
@@ -369,20 +270,20 @@ endmodule`
     {
       date: "18 Nov 2026",
       author: "Mohan Reddy & Team 13",
-      objective: "Finalize 4-bit SPI locker scope, architecture diagram, and launch interactive EE-VDT portfolio.",
-      decision: "Standardized on 4-bit credential over SPI Mode 0 across two FPGAs; validated initial logic in Proteus 8.",
-      course: "Digital Circuits & Digital System Design (Verilog)",
-      learning: "Separating the Master input board and Slave comparator board cleanly demonstrates real serial access control while keeping hardware debugging modular.",
-      next: "Run exhaustive 16-code Vivado behavioral simulation and freeze FR1–FR5 before Review 3."
+      objective: "Finalize the 2-bit SPI locker scope, IC list and interactive portfolio.",
+      decision: "Standardized on a 2-bit credential built from 6 ICs (NE555, 74163, 74165, 74595, 7485, 7432); parts bought on invoice #755 (₹214).",
+      course: "Digital Circuits",
+      learning: "Splitting the circuit into a sender stage and a receiver stage with a serial link keeps debugging modular, one IC at a time.",
+      next: "Complete the Logisim-evolution circuit and run all 4 codes before freezing FR1–FR5 at Review 3."
     },
     {
       date: "11 Nov 2026",
       author: "Pallavi T & Achsah Praisey G",
-      objective: "Evaluate parallel vs. UART vs. SPI communication options for digital locker.",
-      decision: "Selected 4-wire SPI over parallel wiring and UART using weighted Pugh matrix.",
+      objective: "Evaluate parallel vs. UART-style vs. SPI-style communication options for the digital locker.",
+      decision: "Selected the SPI-style serial link over direct parallel wiring and UART-style serial using the weighted Pugh matrix.",
       course: "Computer Organization & Interfacing",
-      learning: "Shared SCLK removes baud-rate drift between boards and simplifies testbench verification.",
-      next: "Draft spi_master.v and spi_slave_locker.v RTL modules."
+      learning: "A shared clock removes baud-rate drift between stages and keeps testing simple.",
+      next: "Draw the circuit in Logisim-evolution using the six ICs."
     }
   ],
 
@@ -391,22 +292,41 @@ endmodule`
       review: "Review 1 — Theme Approval",
       date: "10 Nov 2026",
       observation: "Clarify exact bit-width (4-bit vs 8-bit) consistently across block diagram, objectives, and testbench.",
-      response: "Aligned project specification, objectives, and Verilog RTL parameters to 4-bit access code; noted 8-bit scalability as future scope.",
+      response: "Aligned project specification, objectives, and circuit design to a 2-bit access code (4 variations); wider codes noted as future scope.",
       where: "Page 02 (Problem & Need) & Page 04 (FR Table)"
     }
   ],
 
   risks: [
-    { id: "R1", title: "Floating CS/SS or SCLK lines during FPGA reconfiguration", severity: "High", status: "Mitigated", mitigation: "Add 10 kOhm pull-up on CS/SS (inactive HIGH) and pull-down on SCLK so the Slave stays safely LOCKED while Master reprograms." },
-    { id: "R2", title: "Mechanical pushbutton bounce triggering multiple SPI frames", severity: "High", status: "Planned", mitigation: "Implement a 20 ms counter-based debouncer + rising-edge detector on btn_send in Master FPGA RTL." },
-    { id: "R3", title: "Missing common GND between Master and Slave FPGA boards", severity: "Medium", status: "Mitigated", mitigation: "Dedicate two breadboard ground return jumpers alongside the 4 SPI lines before powering boards." },
-    { id: "R4", title: "SCLK ringing at high frequency over jumper wires", severity: "Medium", status: "Mitigated", mitigation: "Clock-divide SCLK down to <= 100 kHz for breadboard transfers and verify edges on lab oscilloscope." }
+    { id: "R1", title: "Floating or unused inputs on the 74-series ICs cause random behaviour", severity: "High", status: "Planned", mitigation: "Tie every unused input to GND or +5 V, including the 7485 inputs A2, A3, B2, B3 and any unused 74165 inputs." },
+    { id: "R2", title: "An unstable clock or a bouncing switch causes extra shifts", severity: "High", status: "Planned", mitigation: "Use a slow, stable NE555 clock and, if any push-button is used for load or reset, add an RC debounce." },
+    { id: "R3", title: "Missing common GND or loose breadboard jumpers", severity: "Medium", status: "Planned", mitigation: "Run a dedicated ground rail to every IC and re-seat the jumpers before powering the board." },
+    { id: "R4", title: "7485 cascade inputs left unset give a wrong A = B output", severity: "Medium", status: "Planned", mitigation: "For single-chip use tie I(A=B) high and I(A>B), I(A<B) low, as given in the datasheet." }
   ],
 
   files: [
     { name: "Formal Mini-Project Report (Appendix A)", type: "PDF / DOCX", status: "In Progress", url: "#" },
-    { name: "Verilog RTL & Vivado Testbench Repository", type: "GitHub / Drive", status: "Ready to Link", url: "#" },
-    { name: "Proteus 8 Discrete Logic Schematic (.pdsprj)", type: "Schematic", status: "Captured", url: "#" },
-    { name: "Dual-FPGA Pin Constraints (.xdc)", type: "Vivado XDC", status: "Pending R4", url: "#" }
-  ]
+    { name: "Logisim-evolution Circuit File (.circ)", type: "Logisim", status: "In Progress", url: "#" },
+    { name: "Breadboard Photos & Wiring Table", type: "Images / Table", status: "Pending", url: "#" },
+    { name: "Component Purchase Invoice #755 (₹214)", type: "Invoice", status: "Captured", url: "#" }
+  ],
+
+  bom: {
+    invoice: "Invoice No. 755 · 29-10-2026 · Elekzone Technologies, Hubballi",
+    items: [
+      { n: 1, part: "IC 74165 Parallel-In Serial-Out 8-Bit Shift Register", qty: 1, rate: 33.90, amount: 33.90 },
+      { n: 2, part: "IC 74595 SIPO 8-Bit Serial-to-Parallel Shift Register", qty: 1, rate: 25.42, amount: 25.42 },
+      { n: 3, part: "IC 7485 4-Bit Magnitude Comparator", qty: 1, rate: 25.42, amount: 25.42 },
+      { n: 4, part: "IC 7432 Quad 2-Input OR Gate", qty: 1, rate: 12.71, amount: 12.71 },
+      { n: 5, part: "IC 74163 4-Bit Binary Synchronous Counter", qty: 1, rate: 33.90, amount: 33.90 },
+      { n: 6, part: "NE555 Timer IC", qty: 1, rate: 8.48, amount: 8.48 },
+      { n: 7, part: "1 µF 63 V Capacitor", qty: 2, rate: 2.54, amount: 5.08 },
+      { n: 8, part: "4.7 µF 63 V Capacitor", qty: 1, rate: 2.54, amount: 2.54 },
+      { n: 9, part: "DIP Switch 4-Way", qty: 2, rate: 16.95, amount: 33.90 }
+    ],
+    subtotal: 181.35,
+    cgst: 16.32,
+    sgst: 16.32,
+    total: 214.00
+  }
 };

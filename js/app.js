@@ -1,7 +1,7 @@
 (function () {
   const D = window.PORTFOLIO_DATA;
   let currentPage = "home";
-  let activeVerilogTab = "master";
+  let activeVerilogTab = "wiring";
   let activeDecisionFilter = "All";
 
   const sidebarNav = document.getElementById("sidebarNav");
@@ -118,36 +118,36 @@
   }
 
   function renderHome() {
-    const bitsInit = [1, 0, 1, 0];
+    const N = D.meta.storedPasscode.length; // code width (2 bits = 4 variations)
+    const bitsInit = D.meta.storedPasscode.split("").map(Number);
     return `
       <section class="hero-card">
         <div class="hero-grid">
           <div>
             <div class="hero-badges">
               <span class="hero-badge">EE-VDT · SEM V MINI PROJECT</span>
-              <span class="hero-badge">4-WIRE SPI MODE 0</span>
-              <span class="hero-badge">DUAL FPGA · VERILOG HDL</span>
+              <span class="hero-badge">SPI-STYLE SERIAL LINK</span>
+              <span class="hero-badge">6 ICs · LOGISIM + BREADBOARD</span>
             </div>
             <h1>${D.meta.projectTitle}</h1>
             <p>${D.meta.intro}</p>
             <div class="hero-actions">
               <button class="btn btn-primary" data-jump="architecture">Explore Architecture →</button>
-              <button class="btn btn-outline" data-jump="verification">Verilog & Simulation</button>
+              <button class="btn btn-outline" data-jump="verification">Circuit & Verification</button>
               <button class="btn btn-outline" data-jump="notebook">Weekly Notebook</button>
             </div>
           </div>
 
           <div class="telemetry-box">
             <div class="telemetry-top">
-              <span>LIVE 4-BIT SPI LOCKER BENCH</span>
-              <span id="simCodeReadout">TX: 4'b1010 | Stored: 4'b1010</span>
+              <span>LIVE ${N}-BIT LOCKER BENCH</span>
+              <span id="simCodeReadout">TX: ${N}'b${D.meta.storedPasscode} | Stored: ${N}'b${D.meta.storedPasscode}</span>
             </div>
             <div class="padlock-readout">
               <div class="padlock-state" id="padlockText"><span style="color:#ef4444">🔒 LOCKED</span></div>
               <div class="led-bank">
                 <div class="led-item"><div class="led" id="ledGreen"></div><span>UNLOCK</span></div>
                 <div class="led-item"><div class="led red-on" id="ledRed"></div><span>LOCK</span></div>
-                <div class="led-item"><div class="led" id="ledYellow"></div><span>WRONG</span></div>
               </div>
             </div>
             <div class="dip-row">
@@ -155,14 +155,14 @@
                 .map(
                   (b, i) => `
                 <button class="dip-btn ${b ? "on" : ""}" data-bit="${i}">
-                  <span>D${3 - i}</span><strong>${b}</strong>
+                  <span>D${N - 1 - i}</span><strong>${b}</strong>
                 </button>`
                 )
                 .join("")}
             </div>
             <div class="hero-actions">
-              <button class="btn btn-primary" id="simTransmit" style="flex:1">▶ Send via SPI</button>
-              <button class="btn btn-outline" id="simStep">Step SCLK</button>
+              <button class="btn btn-primary" id="simTransmit" style="flex:1">▶ Send Code</button>
+              <button class="btn btn-outline" id="simStep">Step Clock</button>
               <button class="btn btn-outline" id="simReset">Reset</button>
             </div>
           </div>
@@ -170,18 +170,18 @@
       </section>
 
       <div class="grid-4">
-        <div class="card card-hover"><div class="kpi-label">Access Code</div><div class="kpi-val">4-Bit</div><div class="kpi-sub">16 combinations · Stored 4'b${D.meta.storedPasscode}</div></div>
-        <div class="card card-hover"><div class="kpi-label">SPI Interface</div><div class="kpi-val">4 Lines</div><div class="kpi-sub">MOSI · MISO · SCLK · CS/SS</div></div>
+        <div class="card card-hover"><div class="kpi-label">Access Code</div><div class="kpi-val">${N}-Bit</div><div class="kpi-sub">${2 ** N} combinations · Stored ${N}'b${D.meta.storedPasscode}</div></div>
+        <div class="card card-hover"><div class="kpi-label">Hardware</div><div class="kpi-val">6 ICs</div><div class="kpi-sub">NE555 · 74163 · 74165 · 74595 · 7485 · 7432</div></div>
         <div class="card card-hover"><div class="kpi-label">Functional Reqs</div><div class="kpi-val">${D.frs.length} FRs</div><div class="kpi-sub">Ready for Review 3 Freeze</div></div>
         <div class="card card-hover"><div class="kpi-label">Last Updated</div><div class="kpi-val" style="font-size:19px">${D.meta.lastUpdated}</div><div class="kpi-sub">${D.meta.teamId} · ${D.meta.activeReview}</div></div>
       </div>
 
       <div class="card">
         <div class="card-title">
-          <span>Interactive SPI Timing & Logic Analyzer (Mode 0: CPOL=0, CPHA=0)</span>
-          <span class="badge b-blue" id="simCycleReadout">IDLE (CS_N = 1)</span>
+          <span>Interactive Serial Transfer Timing (conceptual view)</span>
+          <span class="badge b-blue" id="simCycleReadout">IDLE</span>
         </div>
-        <p style="font-size:13px;color:var(--text-muted)">Toggle the 4 DIP switches above (try <code>1010</code> for UNLOCK or any other code for WRONG CODE), then click <strong>Send via SPI</strong> or <strong>Step SCLK</strong> to inspect real-time serial framing.</p>
+        <p style="font-size:13px;color:var(--text-muted)">Toggle the ${N} DIP switches above (try <code>${D.meta.storedPasscode}</code> for UNLOCK or any other code to stay LOCKED), then click <strong>Send Code</strong> or <strong>Step Clock</strong> to watch the code shift across one bit per clock pulse.</p>
         <div class="sim-canvas-wrap">
           <canvas id="spiCanvas"></canvas>
         </div>
@@ -331,6 +331,7 @@
   }
 
   function renderFRs(p) {
+    const N = D.meta.storedPasscode.length;
     return `
       ${pageHead(p, "Step 03 — Live Functional Requirements Table (Appendix C) with verification methods and freeze history.")}
       <div class="card">
@@ -350,58 +351,56 @@
       </div>
       <div class="card">
         <div class="card-title"><span>FR Change History Log</span><span class="badge b-slate">Audit Trail</span></div>
-        <p style="font-size:13.5px;color:var(--text-muted)"><strong>18 Nov 2026:</strong> Standardized all FR bit-widths to 4-bit access codes following Review 1 observation. Freeze date will be stamped upon Mentor sign-off at Review 3.</p>
+        <p style="font-size:13.5px;color:var(--text-muted)"><strong>18 Nov 2026:</strong> Standardized all FR bit-widths to ${N}-bit access codes following Review 1 observation. Freeze date will be stamped upon Mentor sign-off at Review 3.</p>
       </div>`;
   }
 
   function renderArchitecture(p) {
+    const N = D.meta.storedPasscode.length;
     return `
-      ${pageHead(p, "Steps 04–05 — Interactive Dual-FPGA 4-Wire SPI architecture. Click any block to inspect ports and governing FRs.")}
+      ${pageHead(p, "Steps 04–05 — Six-IC serial architecture (NE555, 74163, 74165, 74595, 7485, 7432). Click any block to inspect ports and governing FRs.")}
       <div class="card">
-        <div class="card-title"><span>Interactive Dual-FPGA SPI Signal Flow</span><span class="badge b-blue">Animated Bus · Click Any Block</span></div>
+        <div class="card-title"><span>Interactive Six-IC Signal Flow</span><span class="badge b-blue">Animated Bus · Click Any Block</span></div>
         <svg class="arch-svg" viewBox="0 0 920 270" xmlns="http://www.w3.org/2000/svg">
           <rect x="12" y="45" width="160" height="175" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="2" class="arch-node" data-arch="input"/>
-          <text x="92" y="108" text-anchor="middle" fill="#38bdf8" font-family="Inter" font-weight="700" font-size="14">User Input</text>
-          <text x="92" y="132" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono" font-size="11">4-bit Switches</text>
+          <text x="92" y="108" text-anchor="middle" fill="#38bdf8" font-family="Inter" font-weight="700" font-size="14">Code Entry</text>
+          <text x="92" y="132" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono" font-size="11">${N}-bit DIP Switches</text>
           <text x="92" y="152" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="10">FR1 · FR5</text>
 
           <line x1="172" y1="132" x2="218" y2="132" stroke="#38bdf8" stroke-width="2.5" class="spi-flow"/>
 
           <rect x="218" y="30" width="195" height="205" rx="14" fill="#0f172a" stroke="#0ea5e9" stroke-width="2" class="arch-node" data-arch="master"/>
-          <text x="315" y="65" text-anchor="middle" fill="#38bdf8" font-family="Inter" font-weight="800" font-size="15">Master FPGA</text>
-          <text x="315" y="92" text-anchor="middle" fill="#e2e8f0" font-family="JetBrains Mono" font-size="12">SPI Master FSM</text>
-          <text x="315" y="118" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">4-Bit Shift Reg</text>
-          <text x="315" y="144" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">SCLK Divider</text>
+          <text x="315" y="65" text-anchor="middle" fill="#38bdf8" font-family="Inter" font-weight="800" font-size="15">Sender Stage</text>
+          <text x="315" y="92" text-anchor="middle" fill="#e2e8f0" font-family="JetBrains Mono" font-size="12">NE555 Clock</text>
+          <text x="315" y="118" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">74163 Counter</text>
+          <text x="315" y="144" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">74165 PISO Register</text>
           <text x="315" y="198" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono" font-size="11">Governs: FR1, FR4</text>
 
           <g class="arch-node" data-arch="bus">
-            <line x1="413" y1="75" x2="545" y2="75" stroke="#10b981" stroke-width="3" class="spi-flow"/>
-            <text x="479" y="66" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono" font-weight="700" font-size="11">MOSI →</text>
+            <line x1="413" y1="85" x2="545" y2="85" stroke="#10b981" stroke-width="3" class="spi-flow"/>
+            <text x="479" y="76" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono" font-weight="700" font-size="11">SERIAL DATA →</text>
 
-            <line x1="545" y1="115" x2="413" y2="115" stroke="#f59e0b" stroke-width="3" class="spi-flow"/>
-            <text x="479" y="106" text-anchor="middle" fill="#f59e0b" font-family="JetBrains Mono" font-weight="700" font-size="11">← MISO</text>
+            <line x1="413" y1="135" x2="545" y2="135" stroke="#38bdf8" stroke-width="3" class="spi-flow"/>
+            <text x="479" y="126" text-anchor="middle" fill="#38bdf8" font-family="JetBrains Mono" font-weight="700" font-size="11">SHARED CLOCK →</text>
 
-            <line x1="413" y1="155" x2="545" y2="155" stroke="#38bdf8" stroke-width="3" class="spi-flow"/>
-            <text x="479" y="146" text-anchor="middle" fill="#38bdf8" font-family="JetBrains Mono" font-weight="700" font-size="11">SCLK →</text>
-
-            <line x1="413" y1="195" x2="545" y2="195" stroke="#a855f7" stroke-width="3" class="spi-flow"/>
-            <text x="479" y="186" text-anchor="middle" fill="#a855f7" font-family="JetBrains Mono" font-weight="700" font-size="11">CS / SS (LOW) →</text>
+            <line x1="413" y1="185" x2="545" y2="185" stroke="#a855f7" stroke-width="3" class="spi-flow"/>
+            <text x="479" y="176" text-anchor="middle" fill="#a855f7" font-family="JetBrains Mono" font-weight="700" font-size="11">LOAD / LATCH →</text>
           </g>
 
           <rect x="545" y="30" width="195" height="205" rx="14" fill="#0f172a" stroke="#8b5cf6" stroke-width="2" class="arch-node" data-arch="slave"/>
-          <text x="642" y="65" text-anchor="middle" fill="#a78bfa" font-family="Inter" font-weight="800" font-size="15">Slave FPGA</text>
-          <text x="642" y="92" text-anchor="middle" fill="#e2e8f0" font-family="JetBrains Mono" font-size="12">SPI Deserializer</text>
-          <text x="642" y="118" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">4-Bit Comparator</text>
-          <text x="642" y="144" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">Stored: 4'b1010</text>
+          <text x="642" y="65" text-anchor="middle" fill="#a78bfa" font-family="Inter" font-weight="800" font-size="15">Receiver Stage</text>
+          <text x="642" y="92" text-anchor="middle" fill="#e2e8f0" font-family="JetBrains Mono" font-size="12">74595 SIPO Register</text>
+          <text x="642" y="118" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">7485 Comparator</text>
+          <text x="642" y="144" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="11">Stored: ${N}'b${D.meta.storedPasscode}</text>
           <text x="642" y="198" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono" font-size="11">Governs: FR2, FR3</text>
 
           <line x1="740" y1="132" x2="778" y2="132" stroke="#10b981" stroke-width="2.5" class="spi-flow"/>
 
           <rect x="778" y="45" width="130" height="175" rx="12" fill="#0f172a" stroke="#10b981" stroke-width="2" class="arch-node" data-arch="compare"/>
-          <text x="843" y="92" text-anchor="middle" fill="#10b981" font-family="Inter" font-weight="700" font-size="13">Lock Output</text>
-          <text x="843" y="122" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono" font-size="11">● Green: Open</text>
-          <text x="843" y="144" text-anchor="middle" fill="#ef4444" font-family="JetBrains Mono" font-size="11">● Red: Locked</text>
-          <text x="843" y="166" text-anchor="middle" fill="#f59e0b" font-family="JetBrains Mono" font-size="11">● Yellow: Err</text>
+          <text x="843" y="88" text-anchor="middle" fill="#10b981" font-family="Inter" font-weight="700" font-size="13">Lock Output</text>
+          <text x="843" y="118" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono" font-size="11">● Green: A = B</text>
+          <text x="843" y="140" text-anchor="middle" fill="#ef4444" font-family="JetBrains Mono" font-size="11">● Red: A ≠ B</text>
+          <text x="843" y="170" text-anchor="middle" fill="#94a3b8" font-family="JetBrains Mono" font-size="10">7432 OR gate</text>
         </svg>
 
         <div id="archInspector" style="margin-top:14px;padding:14px;border-radius:10px;background:var(--surface-alt);border:1px solid var(--border)">
@@ -424,23 +423,43 @@
   }
 
   function renderCalculations(p) {
+    const bom = D.bom;
+    const money = (n) => n.toFixed(2);
     return `
-      ${pageHead(p, "Steps 06–09 — Design calculations, clock-divider math, LED current sizing, and BOM (Due Review 4).")}
+      ${pageHead(p, "Steps 06–09 — Design calculations (NE555 clock, LED resistor) and Bill of Materials (Due Review 4).")}
       <div class="grid-2">
         <div class="card">
-          <div class="card-title"><span>Calc 01 · SPI Clock Divider</span><span class="badge b-blue">Serves FR1, FR2</span></div>
-          <p class="mono" style="font-size:13px;margin-bottom:8px">f_SCLK = f_SYS / (2 × N) = 100 MHz / (2 × 500) = 100 kHz</p>
-          <p style="font-size:13.5px;color:var(--text-muted)">Provides T_SCLK = 10 µs and 5 µs setup/hold margin across unshielded breadboard jumper wires.</p>
+          <div class="card-title"><span>Calc 01 · NE555 Clock Frequency</span><span class="badge b-blue">Serves FR1, FR4</span></div>
+          <p class="mono" style="font-size:13px;margin-bottom:8px">f ≈ 1.44 / ((R1 + 2·R2) · C)</p>
+          <p style="font-size:13.5px;color:var(--text-muted)">Choose R1, R2 and C so the clock is slow (a few Hz) and every shift can be seen on the LEDs. Capacitors bought: 1 µF (×2) and 4.7 µF (×1). Final resistor values and the calculated frequency: add here after calculation.</p>
         </div>
         <div class="card">
           <div class="card-title"><span>Calc 02 · Status LED Resistor</span><span class="badge b-green">Serves FR3</span></div>
-          <p class="mono" style="font-size:13px;margin-bottom:8px">R = (3.3 V − 2.0 V) / 5 mA = 260 Ω → 330 Ω Standard</p>
-          <p style="font-size:13.5px;color:var(--text-muted)">Limits FPGA GPIO output current to ~3.9 mA per LED, keeping all three indicators well inside 8 mA bank limits.</p>
+          <p class="mono" style="font-size:13px;margin-bottom:8px">R = (V_supply − V_LED) / I_LED</p>
+          <p style="font-size:13.5px;color:var(--text-muted)">Example for a 5 V supply, an LED drop of about 2 V and 10 mA: R = 3 V / 10 mA = 300 Ω, so use 330 Ω. Check the output current limit of the IC that drives the LED; if it is weak, use a larger resistor such as 1 kΩ (about 3 mA). Confirm with your actual LEDs and ICs.</p>
         </div>
       </div>
+
+      <div class="card">
+        <div class="card-title"><span>Bill of Materials</span><span class="badge b-purple">Total ₹${money(bom.total)}</span></div>
+        <p style="font-size:12.5px;color:var(--text-muted);margin-bottom:10px">${bom.invoice}</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Part</th><th>Qty</th><th>Rate (₹)</th><th>Amount (₹)</th></tr></thead>
+            <tbody>
+              ${bom.items.map((i) => `<tr><td>${i.n}</td><td>${i.part}</td><td>${i.qty}</td><td class="mono">${money(i.rate)}</td><td class="mono">${money(i.amount)}</td></tr>`).join("")}
+              <tr><td></td><td colspan="3"><strong>Sub Total</strong></td><td class="mono">${money(bom.subtotal)}</td></tr>
+              <tr><td></td><td colspan="3">CGST (9%)</td><td class="mono">${money(bom.cgst)}</td></tr>
+              <tr><td></td><td colspan="3">SGST (9%)</td><td class="mono">${money(bom.sgst)}</td></tr>
+              <tr><td></td><td colspan="3"><strong>Total (as per invoice)</strong></td><td class="mono"><strong>${money(bom.total)}</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="scaffold-box">
-        <h3>Full Schematic, XDC Constraints & Complete BOM Unlock at Review 4</h3>
-        <p style="margin-top:6px;font-size:13.5px">Add your Vivado synthesis resource utilization table (LUTs, FFs, WNS) and final BOM here before Review 4.</p>
+        <h3>Full Schematic & Wiring Table Unlock at Review 4</h3>
+        <p style="margin-top:6px;font-size:13.5px">Add your Logisim-evolution circuit image and the pin-by-pin breadboard wiring table here before Review 4.</p>
       </div>`;
   }
 
@@ -471,9 +490,11 @@
               <div class="card-title"><span>${d.id} · ${d.title}</span><span class="badge ${d.level === "Verified" ? "b-green" : d.level === "Applied" ? "b-blue" : "b-amber"}">${d.level}</span></div>
               <p style="font-size:12.5px;margin-bottom:6px"><strong>Options:</strong> ${d.options}</p>
               <p style="font-size:12.5px;margin-bottom:6px"><strong>FR Served:</strong> <span class="mono">${d.fr}</span> · <strong>Course:</strong> ${d.course}</p>
+              <p style="font-size:12.5px;margin-bottom:6px"><strong>Foundation Concept:</strong> ${d.concept}</p>
               <p style="font-size:12.5px;margin-bottom:6px"><strong>Concept Applied:</strong> ${d.applied}</p>
               <p style="font-size:12.5px;margin-bottom:6px"><strong>Where Courses Meet:</strong> ${d.meets}</p>
               <p style="font-size:12.5px;color:var(--text-muted)"><strong>Predicted:</strong> ${d.predicted} | <strong>Measured:</strong> ${d.measured}</p>
+              <p style="font-size:12.5px;color:var(--text-muted);margin-top:6px"><strong>Learning:</strong> ${d.learning}</p>
             </div>`
             )
             .join("")}
@@ -497,10 +518,10 @@
   function renderVerification(p) {
     const activeTab = D.verilogTabs.find((t) => t.id === activeVerilogTab) || D.verilogTabs[0];
     return `
-      ${pageHead(p, "Steps 10–12 — Verilog HDL RTL modules, Vivado testbench, and Proteus 8 discrete schematic verification.")}
+      ${pageHead(p, "Steps 10–12 — Logisim-evolution simulation, breadboard prototype and test evidence for the six-IC circuit.")}
       <div class="card">
         <div class="card-title">
-          <span>Verilog HDL Source & Testbench</span>
+          <span>Circuit Notes, Truth Table & Test Procedure</span>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             ${D.verilogTabs
               .map((t) => `<button class="btn ${t.id === activeTab.id ? "btn-primary" : "btn-subtle"}" data-vtab="${t.id}" style="padding:5px 10px;font-size:12px">${t.label}</button>`)
@@ -511,25 +532,25 @@
         <div class="code-box">
           <div class="code-head">
             <span>${activeTab.label}</span>
-            <button class="btn btn-outline" id="copyCodeBtn" style="padding:4px 10px;font-size:11px">Copy Verilog</button>
+            <button class="btn btn-outline" id="copyCodeBtn" style="padding:4px 10px;font-size:11px">Copy Text</button>
           </div>
           <pre id="verilogCodePre"></pre>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title"><span>Proteus 8 Discrete Logic Capture & Hardware Evidence</span><span class="badge b-green">Click Image to Zoom</span></div>
-        <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:12px">Place your exported Proteus schematic in <code>assets/images/proteus-schematic.jpg</code> and your block diagram in <code>assets/images/block-diagram.jpg</code> to display them interactively here.</p>
+        <div class="card-title"><span>Logisim-evolution Simulation & Breadboard Evidence</span><span class="badge b-green">Click Image to Zoom</span></div>
+        <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:12px">Place your Logisim-evolution screenshot in <code>assets/images/logisim-circuit.jpg</code> and your breadboard photo in <code>assets/images/breadboard.jpg</code> to display them interactively here.</p>
         <div class="grid-2">
           <div style="border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-            <img src="assets/images/proteus-schematic.jpg" alt="Proteus 8 Schematic" class="zoomable" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;cursor:zoom-in" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
-            <div style="display:none;padding:34px 10px;color:var(--text-muted);font-size:12.5px">Drop <code>proteus-schematic.jpg</code> into <code>assets/images/</code></div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Fig 8.1 — Proteus 8 Discrete 74HC Logic Validation</div>
+            <img src="assets/images/logisim-circuit.jpg" alt="Logisim-evolution circuit" class="zoomable" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;cursor:zoom-in" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+            <div style="display:none;padding:34px 10px;color:var(--text-muted);font-size:12.5px">Drop <code>logisim-circuit.jpg</code> into <code>assets/images/</code></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Fig 8.1 — Logisim-evolution six-IC circuit</div>
           </div>
           <div style="border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-            <img src="assets/images/block-diagram.jpg" alt="SPI Dual FPGA Block Diagram" class="zoomable" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;cursor:zoom-in" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
-            <div style="display:none;padding:34px 10px;color:var(--text-muted);font-size:12.5px">Drop <code>block-diagram.jpg</code> into <code>assets/images/</code></div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Fig 8.2 — Dual-FPGA SPI System Architecture</div>
+            <img src="assets/images/breadboard.jpg" alt="Breadboard prototype" class="zoomable" style="width:100%;max-height:220px;object-fit:cover;border-radius:8px;cursor:zoom-in" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+            <div style="display:none;padding:34px 10px;color:var(--text-muted);font-size:12.5px">Drop <code>breadboard.jpg</code> into <code>assets/images/</code></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px">Fig 8.2 — Breadboard prototype</div>
           </div>
         </div>
       </div>`;
@@ -604,7 +625,7 @@
 
   function renderFiles(p) {
     return `
-      ${pageHead(p, "Repository links to formal report, Verilog RTL, Proteus files, and Vivado constraints.")}
+      ${pageHead(p, "Links to the formal report, Logisim circuit file, breadboard photos and purchase invoice.")}
       <div class="card">
         <div class="table-wrap">
           <table>
@@ -623,7 +644,7 @@
       { r: "Review 2 — Concept Selection (10 Marks)", pages: "+ Page 3 (Pugh Matrix & Alternatives)", state: "Active", cls: "b-blue" },
       { r: "Review 3 — FR & Architecture Hard Gate (15 Marks)", pages: "+ Pages 4, 5, 7 (Frozen FRs & Applied Cards)", state: "Next", cls: "b-amber" },
       { r: "Review 4 — Design & Calculations (20 Marks)", pages: "+ Page 6 (Calc Cards, Schematic, BOM)", state: "Upcoming", cls: "b-slate" },
-      { r: "Review 5 — Build, Sim & Debugging (20 Marks)", pages: "+ Pages 8, 10 (Vivado + 2+ Failure Cycles)", state: "Upcoming", cls: "b-slate" },
+      { r: "Review 5 — Build, Sim & Debugging (20 Marks)", pages: "+ Pages 8, 10 (Breadboard Build + 2+ Failure Cycles)", state: "Upcoming", cls: "b-slate" },
       { r: "Final Review — Validation & Viva (30 Marks)", pages: "All 16 Pages + Verified Cards + Demo Video", state: "Upcoming", cls: "b-slate" }
     ];
     return `${pageHead(p, "EE-VDT Semester V review milestones and required live pages.")}
@@ -649,7 +670,7 @@
   }
 
   function renderRisks(p) {
-    return `${pageHead(p, "Proactive hardware & protocol risk register before dual-FPGA board integration.")}
+    return `${pageHead(p, "Proactive hardware risk register before breadboard integration.")}
       <div class="grid-2">
         ${D.risks
           .map(
@@ -709,8 +730,9 @@
       const copyBtn = document.getElementById("copyCodeBtn");
       if (copyBtn) {
         copyBtn.addEventListener("click", () => {
-          navigator.clipboard.writeText(activeTab.code);
-          showToast(`Copied ${activeTab.label} to clipboard!`);
+          copyText(activeTab.code)
+            .then(() => showToast(`Copied ${activeTab.label} to clipboard!`))
+            .catch(() => showToast("Could not copy automatically. Select the text and press Ctrl+C."));
         });
       }
 
@@ -722,6 +744,27 @@
         });
       });
     }
+  }
+
+  // Copy that also works when the page is opened as a plain file
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise((resolve, reject) => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy") ? resolve() : reject();
+      } catch (e) {
+        reject(e);
+      }
+      document.body.removeChild(ta);
+    });
   }
 
   function openCmd() {
