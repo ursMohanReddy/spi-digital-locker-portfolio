@@ -221,7 +221,7 @@
       </div>`;
   }
 
-  function renderTeam(p) {
+    function renderTeam(p) {
     return `
       ${pageHead(p, `${D.meta.teamId} · Subsystem ownership and rotating Portfolio Lead schedule.`)}
       <div class="grid-2">
@@ -230,7 +230,9 @@
             (m) => `
           <div class="card card-hover">
             <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-              <div style="width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-family:var(--font-mono)">${m.initials}</div>
+              <div style="width:56px;height:56px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-family:var(--font-mono);overflow:hidden;flex-shrink:0">
+                <img src="assets/team/${m.initials}.jpg" alt="${m.name}" class="zoomable" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in" onerror="this.style.display='none';this.parentElement.append('${m.initials}')"/>
+              </div>
               <div>
                 <div style="font-weight:700;font-size:16px">${m.name}</div>
                 <div class="mono" style="font-size:12px;color:var(--text-muted)">${m.usn}</div>
@@ -618,20 +620,38 @@
       <div class="scaffold-box"><h3>Reflections Open After Each Review & Complete at Final Review</h3><p style="margin-top:6px;font-size:13.5px">Each member (Pallavi, Achsah, Ansiba, Mohan) adds their own learning takeaway after every review milestone.</p></div>`;
   }
 
-  function renderDemo(p) {
+    function renderDemo(p) {
     return `${pageHead(p, "Step 16 — 3–5 minute Final Demonstration video walking through FR1–FR5 and summary poster.")}
-      <div class="scaffold-box"><h3>Final Demonstration Video & Poster (Step 16)</h3><p style="margin-top:6px;font-size:13.5px">Embed your YouTube / Google Drive demo video and poster PDF here before the Final Viva.</p></div>`;
+      <div class="card">
+        <div class="card-title"><span>Demonstration Video</span><span class="badge b-green">Prototype Demo</span></div>
+        <video controls preload="metadata" style="width:100%;max-height:480px;border-radius:8px;background:#000">
+          <source src="assets/video/demo.mp4" type="video/mp4"/>
+          Your browser does not support video playback.
+        </video>
+      </div>
+      <div class="scaffold-box"><h3>Summary Poster (Step 16)</h3><p style="margin-top:6px;font-size:13.5px">Add the poster PDF here before the Final Viva.</p></div>`;
   }
 
   function renderFiles(p) {
     return `
-      ${pageHead(p, "Links to the formal report, Logisim circuit file, breadboard photos and purchase invoice.")}
+      ${pageHead(p, "Links to the formal report, Logisim circuit file, breadboard photos, purchase invoice and IC datasheets.")}
       <div class="card">
         <div class="table-wrap">
           <table>
             <thead><tr><th>Deliverable</th><th>Format</th><th>Status</th><th>Link</th></tr></thead>
             <tbody>
               ${D.files.map((f) => `<tr><td><strong>${f.name}</strong></td><td class="mono">${f.type}</td><td><span class="badge b-blue">${f.status}</span></td><td><a href="${f.url}" class="btn btn-subtle" style="text-decoration:none;padding:4px 10px;font-size:12px">Open</a></td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span>IC Datasheets (Texas Instruments)</span><span class="badge b-purple">${D.datasheets.length} ICs</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>IC</th><th>TI Part</th><th>Function</th><th>Datasheet</th></tr></thead>
+            <tbody>
+              ${D.datasheets.map((d) => `<tr><td class="mono"><strong>${d.ic}</strong></td><td class="mono">${d.part}</td><td>${d.function}</td><td><a href="${d.url}" target="_blank" rel="noopener" class="btn btn-subtle" style="text-decoration:none;padding:4px 10px;font-size:12px">TI PDF</a>${d.local ? ` <a href="${d.local}" target="_blank" rel="noopener" class="btn btn-subtle" style="text-decoration:none;padding:4px 10px;font-size:12px">Local copy</a>` : ""}</td></tr>`).join("")}
             </tbody>
           </table>
         </div>

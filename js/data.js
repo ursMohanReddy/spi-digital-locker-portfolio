@@ -303,7 +303,6 @@ Green LED = (A=B)`
     { id: "R3", title: "Missing common GND or loose breadboard jumpers", severity: "Medium", status: "Planned", mitigation: "Run a dedicated ground rail to every IC and re-seat the jumpers before powering the board." },
     { id: "R4", title: "7485 cascade inputs left unset give a wrong A = B output", severity: "Medium", status: "Planned", mitigation: "For single-chip use tie I(A=B) high and I(A>B), I(A<B) low, as given in the datasheet." }
   ],
-
   files: [
     { name: "Formal Mini-Project Report (Appendix A)", type: "PDF / DOCX", status: "In Progress", url: "#" },
     { name: "Logisim-evolution Circuit File (.circ)", type: "Logisim", status: "In Progress", url: "#" },
@@ -311,6 +310,14 @@ Green LED = (A=B)`
     { name: "Component Purchase Invoice #755 (₹214)", type: "Invoice", status: "Captured", url: "#" }
   ],
 
+  datasheets: [
+    { ic: "NE555", part: "NE555", function: "Astable timer, common clock source", url: "https://www.ti.com/lit/gpn/ne555" },
+    { ic: "74163", part: "SN74LS163A", function: "4-bit synchronous counter", url: "https://www.ti.com/lit/gpn/sn74ls163a" },
+    { ic: "74165", part: "SN74LS165A", function: "8-bit parallel-in serial-out shift register", url: "https://www.ti.com/lit/gpn/sn74ls165a", local: "assets/datasheets/74165-ic.pdf" },
+    { ic: "74595", part: "SN74HC595", function: "8-bit serial-in parallel-out shift register", url: "https://www.ti.com/lit/gpn/sn74hc595" },
+    { ic: "7485", part: "SN74LS85", function: "4-bit magnitude comparator", url: "https://www.ti.com/lit/gpn/sn74ls85" },
+    { ic: "7432", part: "SN74LS32", function: "Quad 2-input OR gate", url: "https://www.ti.com/lit/gpn/sn74ls32" }
+  ],
   bom: {
     invoice: "Invoice No. 755 · 29-10-2026 · Elekzone Technologies, Hubballi",
     items: [
