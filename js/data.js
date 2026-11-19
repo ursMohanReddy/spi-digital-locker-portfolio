@@ -69,8 +69,8 @@ window.PORTFOLIO_DATA = {
 
   team: [
     { name: "Pallavi T", usn: "01FE24BEV040", initials: "PT", role: "Clock & Sender Stage (NE555, 74163, 74165)", subsystem: "Clock & Sender Circuit", leadReview: "Review 1", status: "Active" },
-    { name: "Achsah Praisey G", usn: "01FE24BEV003", initials: "AP", role: "Receiver & Comparator (74595, 7485, 7432)", subsystem: "Receiver & Lock Logic", leadReview: "Review 2", status: "Current Lead" },
-    { name: "Ansiba S", usn: "01FE25BEV702", initials: "AS", role: "Breadboard Wiring & Hardware Testing", subsystem: "Breadboard, LEDs & Interconnect", leadReview: "Review 3", status: "Active" },
+    { name: "Achsah Praisey G", usn: "01FE24BEV003", initials: "AP", role: "Logisim simulation Receiver & Comparator (74595, 7485, 7432)", subsystem: "Receiver & Lock Logic", leadReview: "Review 2", status: "Current Lead" },
+    { name: "Ansiba S", usn: "01FE25BEV702", initials: "AS", role: "Logisim simulation, Breadboard Wiring & Hardware Testing", subsystem: "Breadboard, LEDs & Interconnect", leadReview: "Review 3", status: "Active" },
     { name: "Mohan Reddy", usn: "01FE24BEV035", initials: "MR", role: "Logisim Simulation, Timing & Portfolio", subsystem: "Verification & System Integration", leadReview: "Review 4–Final", status: "Active" }
   ],
 
